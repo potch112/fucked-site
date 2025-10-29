@@ -107,7 +107,7 @@ async function geminiFlow() {
     what_might_unfuck: j.what_might_unfuck || "",
     odds_unfucking: j.odds_unfucking || "—",
     level: valid.has(j.level) ? j.level : "properly-fucked",
-    date: new Date().toISOString().slice(0,10),
+    date: new Date().toISOString(),
     source_url
   };
   // Ensure multi-paragraph structure is kept
