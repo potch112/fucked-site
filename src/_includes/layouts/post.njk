@@ -7,7 +7,7 @@ layout: layouts/base.njk
   <p class="lede">{{ lede }}</p>
 
 <section class="satire">
-  {{ content | safe }}
+  {{ content | paragraphs | safe }}
 </section>
 
 <section class="facts">
