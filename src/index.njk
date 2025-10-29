@@ -23,5 +23,16 @@ layout: layouts/base.njk
   {% endif %}
 {% endfor %}
 </ul>
+{% set count = 0 %}
+{% for post in collections.posts %}
+  {% if count < 5 %}
+    {# …render your card/link for post… #}
+    {% set count = count + 1 %}
+  {% else %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<p class="muted"><a href="/archive/">View all posts →</a></p>
 
 </section>

@@ -5,31 +5,20 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addNunjucksFilter("date", (value, fmt = "yyyy-LL-dd") => {
     if (!value) return "";
-    const dt =
-      value instanceof Date
-        ? DateTime.fromJSDate(value)
-        : DateTime.fromISO(String(value));
+    const dt = value instanceof Date ? DateTime.fromJSDate(value) : DateTime.fromISO(String(value));
     return dt.setZone("utc").toFormat(fmt);
   });
 
-  // paragraphs filter for Nunjucks and Liquid
-  const paragraphs = (text) => {
-    if (!text) return "";
-    return text
-      .trim()
-      .split(/\n{2,}/)
-      .map((p) => `<p>${p.trim()}</p>`)
-      .join("\n");
-  };
-  eleventyConfig.addNunjucksFilter("paragraphs", paragraphs);
-  eleventyConfig.addLiquidFilter("paragraphs", paragraphs);
-
-  // keep nl2br if used elsewhere
-  eleventyConfig.addNunjucksFilter("nl2br", (s) => (s || "").replace(/\n/g, "<br>"));
-
-  eleventyConfig.addCollection("posts", (api) =>
-    api.getFilteredByGlob("src/posts/**/*.md")
-  );
+  // Sort posts newest first
+  eleventyConfig.addCollection("posts", (collectionApi) => {
+    const items = collectionApi.getFilteredByGlob("src/posts/**/*.md");
+    items.sort((a, b) => {
+      const da = new Date(a.data.date || a.date);
+      const db = new Date(b.data.date || b.date);
+      return db - da; // desc
+    });
+    return items;
+  });
 
   return { dir: { input: "src", includes: "_includes", output: "_site" } };
 };
