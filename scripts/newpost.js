@@ -169,8 +169,8 @@ async function main() {
       { type: "text", name: "whats_fucked", message: "What’s fucked:" },
       { type: "text", name: "what_might_unfuck", message: "What might unfuck:" },
       { type: "text", name: "odds_unfucking", message: "Odds of unfucking (e.g., 18% this year):" },
-      { type: "text", name: "satire", message: "Satire body (120–180 words, dry, NZ/UK spelling):" }
-      { type: "text", name: "source_url", message: "Source URL (optional, press Enter to skip):" }
+      { type: "editor", name: "satire", message: "Satire body (120–180 words, dry, NZ/UK spelling):", validate: value => value.trim().length > 20 ? true : "Please enter something                     substantial." },
+      {   type: "text", name: "source_url", message: "Source URL (optional, press Enter to skip):" }
     ]);
     meta = {
       title: normaliseInline(title),
