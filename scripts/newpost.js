@@ -70,6 +70,11 @@ async function scrape(url) {
 }
 
 function frontMatter(meta, body) {
+  // Ensure there's always a source URL, even for manual posts
+  const source = meta.source_url && meta.source_url.trim()
+    ? meta.source_url.trim()
+    : "https://fucked.co.nz";
+
   return `---
 title: "${meta.title.replace(/"/g, '\\"')}"
 layout: layouts/post.njk
@@ -78,7 +83,7 @@ tags: ["posts"]
 fucked_level: "${meta.level}"
 summary: "${meta.summary.replace(/"/g, '\\"')}"
 lede: "${meta.lede.replace(/"/g, '\\"')}"
-source_url: "${meta.source_url}"
+source_url: "${source}"
 whats_fucked: "${meta.whats_fucked.replace(/"/g, '\\"')}"
 what_might_unfuck: "${meta.what_might_unfuck.replace(/"/g, '\\"')}"
 odds_unfucking: "${meta.odds_unfucking.replace(/"/g, '\\"')}"
@@ -86,8 +91,10 @@ odds_unfucking: "${meta.odds_unfucking.replace(/"/g, '\\"')}"
 
 ${body}
 
-${meta.source_url ? `\n\n<p class="muted">Source: <a href="${meta.source_url}">${meta.source_url}</a></p>\n` : ""}`;
+<p class="muted">Source: <a href="${source}">${source}</a></p>
+`;
 }
+
 
 async function llmDraft({ title, text }) {
   const system = `You write for fucked.co.nz. Tone: formal, dry, NZ/UK spelling. No defamation. Limit the word “fucked” to ≤4 uses. No new facts—summarise. Output JSON with keys: summary, lede, satire, whats_fucked, what_might_unfuck, odds_unfucking (like "18% this year"), level in {"lightly-fucked","properly-fucked","magnificently-fucked"}.`;
@@ -163,6 +170,7 @@ async function main() {
       { type: "text", name: "what_might_unfuck", message: "What might unfuck:" },
       { type: "text", name: "odds_unfucking", message: "Odds of unfucking (e.g., 18% this year):" },
       { type: "text", name: "satire", message: "Satire body (120–180 words, dry, NZ/UK spelling):" }
+      { type: "text", name: "source_url", message: "Source URL (optional, press Enter to skip):" }
     ]);
     meta = {
       title: normaliseInline(title),
@@ -173,7 +181,7 @@ async function main() {
       odds_unfucking: normaliseInline(man.odds_unfucking || "—"),
       level: man.level || "properly-fucked",
       date: new Date().toISOString().slice(0, 10),
-      source_url
+      source_url: man.source_url || source_url || "",
     };
     satireBody = normaliseBody(man.satire || "");
   }
