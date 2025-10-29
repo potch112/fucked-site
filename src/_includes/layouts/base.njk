@@ -1,0 +1,14 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or "fucked.co.nz" }}</title>
+  <meta name="description" content="{{ description or 'A tidy, politely exasperated catalogue of the thoroughly fucked.' }}">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  <main class="card">{{ content | safe }}</main>
+  <footer class="center muted">© <span id="year"></span> fucked.co.nz</footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "fucked-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "fucked.co.nz site",
+  "scripts": {
+    "build": "npx @11ty/eleventy",
+    "dev": "npx @11ty/eleventy --serve",
+    "test": "echo \"no tests\""
+  },
+  "devDependencies": {
+    "luxon": "^3.7.2"
+  }
+}

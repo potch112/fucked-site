@@ -1,0 +1,22 @@
+﻿---
+title: fucked.co.nz
+layout: layouts/base.njk
+---
+<header class="center">
+  <div class="badge">A very tidy catalogue of the thoroughly fucked</div>
+  <h1>Welcome to <span>fucked.co.nz</span></h1>
+  <p class="tagline">We recognise the obvious, organise the chaos, and keep it politely civil.</p>
+</header>
+
+<section aria-label="latest">
+  <h2>Latest</h2>
+  <ul class="postlist">
+  {% for post in collections.posts | reverse %}
+    <li>
+      <a href="{{ post.url }}">{{ post.data.title }}</a>
+      <span class="muted"> · {{ post.date | date("yyyy-MM-dd") }} · {{ post.data.fucked_level }}</span>
+      <div class="summary">{{ post.data.summary }}</div>
+    </li>
+  {% endfor %}
+  </ul>
+</section>
