@@ -10,10 +10,10 @@ async function genSatireGemini({ title, text }) {
 `Return ONLY JSON with keys:
 summary, lede, satire, whats_fucked, what_might_unfuck, odds_unfucking, level.
 Rules:
-- NZ/UK spelling. No new facts. No defamation. On-topic.
+- NZ/UK spelling. No new facts. No defamation. On-topic. No pandering to left wing or right wing - just objectivity.
 - Use the word "fucked" 3–4 times total, distributed across the piece.
 - Tone: weary, dry, specific, grounded in the provided text.
-- "satire" MUST be 3–5 paragraphs, 450–700 words total, with clear paragraph breaks.
+- "satire" MUST be 3–4 paragraphs, 200–300 words total, with clear paragraph breaks.
 - Give it a distinct narrative voice. Avoid listiness.
 - "level" ∈ {"lightly-fucked","properly-fucked","magnificently-fucked"}.
 - Keep "summary" one line. "lede" two sentences max.

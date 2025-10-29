@@ -1,5 +1,5 @@
 ---
-title: "Stuff"
+title: "Minister confirms gambling backtrack to fund community clubs"
 layout: layouts/post.njk
 date: 2025-10-29
 tags: ["posts"]
