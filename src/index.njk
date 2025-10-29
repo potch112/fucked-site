@@ -13,26 +13,16 @@ layout: layouts/base.njk
 <section aria-label="latest">
   <h2>Latest</h2>
   <ul class="postlist">
-{% for post in collections.posts | reverse %}
-  {% if loop.index0 < 5 %}
-    <li>
-      <a href="{{ post.url }}">{{ post.data.title }}</a>
-      <span class="muted"> · {{ post.date | date("yyyy-LL-dd") }} · {{ post.data.fucked_level }}</span>
-      <div class="summary">{{ post.data.summary }}</div>
-    </li>
-  {% endif %}
-{% endfor %}
-</ul>
-{% set count = 0 %}
-{% for post in collections.posts %}
-  {% if count < 5 %}
-    {# …render your card/link for post… #}
-    {% set count = count + 1 %}
-  {% else %}
-    {% break %}
-  {% endif %}
-{% endfor %}
+    {% for post in collections.posts | reverse %}
+      {% if loop.index0 < 5 %}
+        <li>
+          <a href="{{ post.url }}">{{ post.data.title }}</a>
+          <span class="muted"> · {{ post.date | date("yyyy-LL-dd") }} · {{ post.data.fucked_level }}</span>
+          <div class="summary">{{ post.data.summary }}</div>
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
 
-<p class="muted"><a href="/archive/">View all posts →</a></p>
-
+  <p class="muted"><a href="/archive/">View all posts →</a></p>
 </section>
