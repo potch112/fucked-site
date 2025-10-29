@@ -19,6 +19,14 @@ const POSTS_DIR = path.join("src", "posts");
 function toSlug(s) {
   return slugify(s, { lower: true, strict: true }).slice(0, 80) || "post";
 }
+function readStdin() {
+  return new Promise(resolve => {
+    const chunks = [];
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("data", c => chunks.push(c));
+    process.stdin.on("end", () => resolve(chunks.join("")));
+  });
+}
 
 // --- normalisation helpers ---
 function normaliseBody(input = "") {
@@ -113,21 +121,23 @@ async function llmDraft({ title, text }) {
 async function main() {
   fs.mkdirSync(POSTS_DIR, { recursive: true });
 
-  const answers = await prompts([
-    {
-      type: "select",
-      name: "mode",
-      message: "Create post from:",
-      choices: [
-        { title: "URL (scrape)", value: "url" },
-        { title: "Paste body text", value: "paste" }
-      ],
-      initial: 0
-    },
-    { type: prev => prev === "url" ? "text" : null, name: "url", message: "Article URL:" },
-    { type: prev => prev === "paste" ? "text" : null, name: "title", message: "Post title:" },
-    { type: prev => prev === "paste" ? "text" : null, name: "text", message: "Paste article body text:" }
-  ]);
+const man = await prompts([
+  { type: "text", name: "summary", message: "One-line neutral summary:" },
+  { type: "text", name: "lede", message: "Two-sentence neutral lede:" },
+  { type: "select", name: "level", message: "Fucked level:", choices: [
+    { title: "lightly-fucked", value: "lightly-fucked" },
+    { title: "properly-fucked", value: "properly-fucked" },
+    { title: "magnificently-fucked", value: "magnificently-fucked" }
+  ], initial: 1 },
+  { type: "text", name: "whats_fucked", message: "What’s fucked:" },
+  { type: "text", name: "what_might_unfuck", message: "What might unfuck:" },
+  { type: "text", name: "odds_unfucking", message: "Odds of unfucking (e.g., 18% this year):" },
+  { type: "text", name: "source_url", message: "Source URL (optional):" }
+]);
+
+console.log("\nPaste the satire body (any length, multi-paragraph).");
+console.log("When finished, press Ctrl+Z then Enter (Windows).\n");
+const satireBodyRaw = await readStdin();
 
   let source_url = "";
   let title = answers.title || "";
@@ -172,19 +182,18 @@ async function main() {
       { type: "editor", name: "satire", message: "Satire body (120–180 words, dry, NZ/UK spelling):", validate: value => value.trim().length > 20 ? true : "Please enter something                     substantial." },
       {   type: "text", name: "source_url", message: "Source URL (optional, press Enter to skip):" }
     ]);
-    meta = {
-      title: normaliseInline(title),
-      summary: normaliseInline(man.summary || ""),
-      lede: normaliseInline(man.lede || ""),
-      whats_fucked: normaliseInline(man.whats_fucked || ""),
-      what_might_unfuck: normaliseInline(man.what_might_unfuck || ""),
-      odds_unfucking: normaliseInline(man.odds_unfucking || "—"),
-      level: man.level || "properly-fucked",
-      date: new Date().toISOString().slice(0, 10),
-      source_url: man.source_url || source_url || "",
-    };
-    satireBody = normaliseBody(man.satire || "");
-  }
+meta = {
+  title: normaliseInline(title),
+  summary: normaliseInline(man.summary || ""),
+  lede: normaliseInline(man.lede || ""),
+  whats_fucked: normaliseInline(man.whats_fucked || ""),
+  what_might_unfuck: normaliseInline(man.what_might_unfuck || ""),
+  odds_unfucking: normaliseInline(man.odds_unfucking || "—"),
+  level: man.level || "properly-fucked",
+  date: new Date().toISOString().slice(0, 10),
+  source_url: man.source_url || source_url || ""
+};
+satireBody = normaliseBody(satireBodyRaw || "");
 
   const slug = toSlug(title);
   const file = path.join(POSTS_DIR, `${meta.date}-${slug}.md`);
