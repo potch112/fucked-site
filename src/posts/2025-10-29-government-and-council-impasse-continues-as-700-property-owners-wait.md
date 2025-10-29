@@ -12,9 +12,6 @@ what_might_unfuck: "It could be unfucked if someone—anyone—took responsibili
 odds_unfucking: "65%"
 ---
 
-It could be unfucked if someone—anyone—took responsibility and passed a short, boring piece of legislation to restore the affected consents. But since bureaucratic inertia is New Zealand’s national sport, it’ll probably remain politely, procedurally fucked until every developer has gone broke or retired.
-
-Satirical overview (for fucked.co.nz):
 Welcome to Auckland’s latest housing drama, a production so magnificently fucked it should come with popcorn and a consent form. Around 700 property owners thought they had approval to build under Plan Change 78, until the council scrapped it like last season’s Love Island and sent them all letters basically saying, “Oops, your dreams are illegal now.” The Government insists the council already has the “tools” to fix it, which is bureaucrat-speak for “we lost the wrench months ago.”
 
 Housing Minister Chris Bishop claims Auckland has everything it needs under the RMA. Auckland Council politely replies that it doesn’t, can’t, and won’t move until Wellington does the paperwork. Between them sits a pile of stalled housing projects, mortgage interest, and nervous developers wondering if they should’ve just built a Bunnings shed and called it a home.
