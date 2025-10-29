@@ -154,7 +154,7 @@ async function main() {
 
   const slug = toSlug(title);
   const file = path.join(POSTS_DIR, `${meta.date}-${slug}.md`);
-  const md = frontMatter(meta, `**Fucked.co.nz take**\n\n${satireBody}\n`);
+  const md = frontMatter(meta, `${satireBody}\n`);
   fs.writeFileSync(file, md, "utf8");
 
   console.log(`\nCreated: ${file}`);

@@ -9,3 +9,9 @@ h2{margin:18px 0 8px} .muted{color:var(--muted)} .lede{font-size:18px;color:#e7e
 .postlist li:first-child{border-top:none} .summary{color:var(--muted);font-size:14.5px}
 .bullets{margin-top:12px}
 a{color:#c7d7ff;text-decoration:none;border-bottom:1px dotted rgba(199,215,255,.5)} a:hover{border-bottom-color:transparent}
+.satire{margin-top:16px;font-size:18px;line-height:1.7}
+.facts{text-align:center;margin-top:24px}
+.facts .fact{margin:14px 0}
+.facts h3{margin:0 0 6px;font-size:20px;letter-spacing:.2px}
+.facts p{margin:0;font-size:18px;line-height:1.6}
+

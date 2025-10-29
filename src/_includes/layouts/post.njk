@@ -6,16 +6,25 @@ layout: layouts/base.njk
   <p class="muted">{{ date | date("yyyy-MM-dd") }} · {{ fucked_level }}</p>
   <p class="lede">{{ lede }}</p>
 
-  <section>
-    <strong>Fucked.co.nz take</strong>
-    <div class="satire">{{ content | safe }}</div>
-  </section>
+<section class="satire">
+  {{ content | safe }}
+</section>
 
-  <ul class="bullets">
-    <li><strong>What’s fucked:</strong> {{ whats_fucked }}</li>
-    <li><strong>What might unfuck:</strong> {{ what_might_unfuck }}</li>
-    <li><strong>Odds of unfucking:</strong> {{ odds_unfucking }}</li>
-  </ul>
+<section class="facts">
+  <div class="fact">
+    <h3>What’s fucked</h3>
+    <p>{{ whats_fucked | nl2br | safe }}</p>
+  </div>
+  <div class="fact">
+    <h3>What might unfuck</h3>
+    <p>{{ what_might_unfuck | nl2br | safe }}</p>
+  </div>
+  <div class="fact">
+    <h3>Odds of unfucking</h3>
+    <p>{{ odds_unfucking }}</p>
+  </div>
+</section>
+
 
   {% if source_url %}<p class="muted">Source: <a href="{{ source_url }}">{{ source_url }}</a></p>{% endif %}
 </article>
