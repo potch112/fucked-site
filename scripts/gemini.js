@@ -32,7 +32,7 @@ Field rules:
 - lede: 2 sentences, neutral newsroom style, no spin, no adjectives that imply approval/disapproval.
 - satire: 3–4 paragraphs minimum, each ≥4 sentences. Voice: weary reporter cataloguing dysfunction. Techniques allowed: irony, dry understatement, procedural absurdity, euphemism. Forbidden: sermons, scolding, hopeful uplift, activism.
 - whats_fucked: 1–2 sentences, mechanics-only (e.g., “conflicting incentives,” “messaging vs delivery,” “process failure,” “perverse outcomes”).
-- what_might_unfucking: 1 sentence, strictly operational (coordination, comms, sequencing). No “should,” no value judgements.
+- what_might_unfuck: 1 sentence, strictly operational (coordination, comms, sequencing). No “should,” no value judgements.
 - odds_unfucking: format like “23% ” (0–100%). Briefly justify with one operational clause, not moral claims.
 
 Style constraints:
