@@ -1,8 +1,3 @@
-﻿@"
 [build]
 command = "npx @11ty/eleventy"
 publish = "_site"
-"@ | Out-File -Encoding ascii netlify.toml
-git add netlify.toml
-git commit -m "fix: clean netlify.toml"
-git push
