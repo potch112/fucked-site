@@ -20,6 +20,30 @@ function toSlug(s) {
   return slugify(s, { lower: true, strict: true }).slice(0, 80) || "post";
 }
 
+// --- normalisation helpers ---
+function normaliseBody(input = "") {
+  // Keep double newlines as paragraphs. Turn single newlines into spaces.
+  let s = String(input)
+    .replace(/\r\n/g, "\n")
+    .replace(/\u00A0/g, " ")       // non-breaking space → normal space
+    .replace(/\n{3,}/g, "\n\n")    // collapse 3+ newlines to 2
+    .replace(/(?<!\n)\n(?!\n)/g, " ") // single newline → space
+    .replace(/\s{2,}/g, " ");      // collapse runs of spaces
+  // Ensure space after sentence punctuation when followed by a letter
+  s = s.replace(/([.!?])([A-Za-z])/g, "$1 $2");
+  return s.trim();
+}
+function normaliseInline(input = "") {
+  // For front-matter fields that are inline text; no paragraph intent
+  let s = String(input)
+    .replace(/\r\n/g, " ")
+    .replace(/\n/g, " ")
+    .replace(/\u00A0/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .replace(/([.!?])([A-Za-z])/g, "$1 $2");
+  return s.trim();
+}
+
 async function scrape(url) {
   const res = await axios.get(url, { headers: { "User-Agent": "Mozilla/5.0" }, timeout: 20000 });
   const dom = new JSDOM(res.data);
@@ -28,15 +52,20 @@ async function scrape(url) {
     (doc.querySelector("meta[property='og:title']")?.content ||
      doc.querySelector("title")?.textContent ||
      "").trim();
-  // Crude body extraction
-  const article =
-    doc.querySelector("article") ||
-    doc.querySelector("main") ||
-    doc.querySelector("[role='main']") ||
-    doc.body;
-  // Strip scripts/styles
-  article.querySelectorAll("script,style,noscript").forEach(n => n.remove());
-  const text = article.textContent.replace(/\s+/g, " ").trim();
+
+  // Prefer paragraph-like nodes to preserve structure
+  const root =
+    doc.querySelector("article, main, [role='main']") || doc.body;
+  root.querySelectorAll("script,style,noscript").forEach(n => n.remove());
+
+  const blocks = [...root.querySelectorAll("p, h2, h3, li")]
+    .map(n => n.textContent.trim())
+    .filter(Boolean);
+
+  const text = normaliseBody(
+    blocks.length ? blocks.join("\n\n") : root.textContent
+  );
+
   return { title: title || url, text };
 }
 
@@ -69,14 +98,12 @@ async function llmDraft({ title, text }) {
     temperature: 0.5
   });
   const raw = resp.choices[0].message.content;
-  // Try to extract JSON
   const match = raw.match(/\{[\s\S]*\}/);
   const j = match ? JSON.parse(match[0]) : JSON.parse(raw);
   return j;
 }
 
 async function main() {
-  // Ensure posts dir
   fs.mkdirSync(POSTS_DIR, { recursive: true });
 
   const answers = await prompts([
@@ -112,19 +139,18 @@ async function main() {
   if (useLLM) {
     const j = await llmDraft({ title, text });
     meta = {
-      title,
-      summary: j.summary || "",
-      lede: j.lede || "",
-      whats_fucked: j.whats_fucked || "",
-      what_might_unfuck: j.what_might_unfuck || "",
-      odds_unfucking: j.odds_unfucking || "—",
+      title: normaliseInline(title),
+      summary: normaliseInline(j.summary || ""),
+      lede: normaliseInline(j.lede || ""),
+      whats_fucked: normaliseInline(j.whats_fucked || ""),
+      what_might_unfuck: normaliseInline(j.what_might_unfuck || ""),
+      odds_unfucking: normaliseInline(j.odds_unfucking || "—"),
       level: j.level || "properly-fucked",
       date: new Date().toISOString().slice(0, 10),
       source_url
     };
-    satireBody = j.satire || "";
+    satireBody = normaliseBody(j.satire || "");
   } else {
-    // Manual prompts
     const man = await prompts([
       { type: "text", name: "summary", message: "One-line neutral summary:" },
       { type: "text", name: "lede", message: "Two-sentence neutral lede:" },
@@ -139,17 +165,17 @@ async function main() {
       { type: "text", name: "satire", message: "Satire body (120–180 words, dry, NZ/UK spelling):" }
     ]);
     meta = {
-      title,
-      summary: man.summary || "",
-      lede: man.lede || "",
-      whats_fucked: man.whats_fucked || "",
-      what_might_unfuck: man.what_might_unfuck || "",
-      odds_unfucking: man.odds_unfucking || "—",
+      title: normaliseInline(title),
+      summary: normaliseInline(man.summary || ""),
+      lede: normaliseInline(man.lede || ""),
+      whats_fucked: normaliseInline(man.whats_fucked || ""),
+      what_might_unfuck: normaliseInline(man.what_might_unfuck || ""),
+      odds_unfucking: normaliseInline(man.odds_unfucking || "—"),
       level: man.level || "properly-fucked",
       date: new Date().toISOString().slice(0, 10),
       source_url
     };
-    satireBody = man.satire || "";
+    satireBody = normaliseBody(man.satire || "");
   }
 
   const slug = toSlug(title);
